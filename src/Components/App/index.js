@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Route, Link } from 'react-router-dom';
-import Home from '../Home';
-import About from '../About';
+import Routes from '../../Routes';
+import RouteWithSubRoutes from '../../Routes/RouteWithSubRoutes';
 
 class App extends Component {
   render() {
@@ -14,9 +14,8 @@ class App extends Component {
         </ul>
 
         <hr />
-
-        <Route exact path="/" component={Home} />
-        <Route path="/about" component={About} />
+        <h1>{this.props.hello}</h1>
+        {Routes.map((route, i) => <RouteWithSubRoutes key={i} {...route} />)}
       </div>
     );
   }

@@ -6,7 +6,11 @@ const React = require('react');
 const ReactDOMServer = require('react-dom/server');
 const StaticRouter = require('react-router').StaticRouter;
 const App = require('../src/Components/App').default;
-const Home = require('../src/Components/Home').defaul;
+const Home = require('../src/Components/Home').default;
+
+const grpc = require('grpc');
+const proto = grpc.load(__dirname + '/pb/hello.proto').hello;
+const client = new proto.HelloService('localhost:8085', grpc.credentials.createInsecure());
 
 require('./webpack-dev-server')(app);
 
@@ -18,17 +22,20 @@ app.use('/public', express.static(path.join(__dirname, '../public')));
 app.get('*', (req, res) => {
   const context = {};
 
-  const html = ReactDOMServer.renderToString(
-    <StaticRouter location={req.url} context={context}>
-      <App />
-    </StaticRouter>
-  );
+  client.sayHello({ Name: 'me' }, function(err, response) {
+    console.log('Greeting:', response.Message);
+    const html = ReactDOMServer.renderToString(
+      <StaticRouter location={req.url} context={context}>
+        <App />
+      </StaticRouter>
+    );
 
-  if (context.url) {
-    res.redirect(301, context.url);
-  } else {
-    res.render('pages/index.ejs', { app: html });
-  }
+    if (context.url) {
+      res.redirect(301, context.url);
+    } else {
+      res.render('pages/index.ejs', { app: html });
+    }
+  });
 });
 
 app.listen(8080, () => {
