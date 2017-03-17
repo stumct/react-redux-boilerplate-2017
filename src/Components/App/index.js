@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import { Route, Link } from 'react-router-dom';
-import Routes from '../../Routes';
-import RouteWithSubRoutes from '../../Routes/RouteWithSubRoutes';
+import { connect } from 'react-redux';
+import { Route, Link, BrowserRouter as Router, Switch, withRouter } from 'react-router-dom';
+import Home from '../Home';
+import About from '../About';
+import { getHello } from '../../Redux/Reducers/Test';
 
 class App extends Component {
   render() {
@@ -13,12 +15,23 @@ class App extends Component {
           <li><Link to="/topics">Topics</Link></li>
         </ul>
 
-        <hr />
         <h1>{this.props.hello}</h1>
-        {Routes.map((route, i) => <RouteWithSubRoutes key={i} {...route} />)}
+        <Switch>
+          <Route exact path="/" render={() => <Home />} />
+          <Route exact path="/about" render={() => <About />} />
+          <Route render={() => <h1>No matching route!</h1>} />
+        </Switch>
       </div>
     );
   }
 }
 
-export default App;
+const mapStateToProps = state => ({
+  hello: getHello(state),
+});
+
+const mapDispatchToProps = dispatch => ({
+  test: () => dispatch({ type: 'TEST' }),
+});
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
