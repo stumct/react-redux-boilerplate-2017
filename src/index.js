@@ -1,13 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './Components/App';
-import { Route } from 'react-router-dom';
 import { createStore, applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';
 import createHistory from 'history/createBrowserHistory';
 import { ConnectedRouter, routerReducer, routerMiddleware, push } from 'react-router-redux';
 import reducers from './Redux/Reducers';
 import createLogger from 'redux-logger';
+
+import './Styles/global.scss';
 
 const logger = createLogger();
 const history = createHistory();

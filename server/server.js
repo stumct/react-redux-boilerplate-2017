@@ -32,7 +32,13 @@ app.get('*', (req, res) => {
     const preloadedState = { Test: { hello: 'test' } };
     const store = createStore(reducers, preloadedState);
     res.render('pages/index.ejs', {
-      app: ReactDOMServer.renderToString(<Provider store={store}><StaticRouter location={req.url} context={context}><App /></StaticRouter></Provider>),
+      app: ReactDOMServer.renderToString(
+        <Provider store={store}>
+          <StaticRouter location={req.url} context={context}>
+            <App />
+          </StaticRouter>
+        </Provider>
+      ),
       state: JSON.stringify(store.getState()).replace(/</g, '\\u003c'),
     });
   }
